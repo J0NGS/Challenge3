@@ -14,10 +14,10 @@ public class MsCloudGatewayApplication {
 		SpringApplication.run(MsCloudGatewayApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	public RouteLocator routes(RouteLocatorBuilder builder){
 		return builder.routes()
-                .route("ms-cloud-gateway", r -> r.path("/ms-cloud-gateway/**").uri("lb://ms-cloud-gateway"))
+                .route("msEmployees", r -> r.path("/msEmployees/**").uri("lb://msEmployees"))
                 .build();
-	}*/
+	}
 }
