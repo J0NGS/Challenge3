@@ -1,9 +1,13 @@
 package br.joao.neto.msEmployees.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,70 +18,70 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
 
     @Mock
     private EmployeeRepository employeeRepository;
 
+    @InjectMocks
     private EmployeeService employeeService;
 
     private Employee employee;
 
     @BeforeEach
     public void setup() {
-        employeeService = new EmployeeService(employeeRepository);
         employee = new Employee("Jhon Textor", "12345678901");
+        UUID id = UUID.randomUUID();
+        employee.setId(id);
     }
 
     @Test
     public void testCreateEmployee() {
-        given(employeeRepository.save(employee)).willReturn(employee);
+        when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
+            Employee savedEmployee = invocation.getArgument(0);
+            savedEmployee.setId(UUID.randomUUID());
+            return savedEmployee;
+    });
 
-        Employee createdEmployee = employeeService.create(employee);
+    Employee createdEmployee = employeeService.create(employee);
 
-        assertThat(createdEmployee).isNotNull();
-        assertThat(createdEmployee.getId()).isEqualTo(employee.getId());
-        assertThat(createdEmployee.getCpf()).isEqualTo(employee.getCpf());
-        assertThat(createdEmployee.getName()).isEqualTo(employee.getName());
-    }
+    Assertions.assertThat(createdEmployee).isEqualTo(employee);
+}
 
     @Test
     public void testFindEmployeeById() {
-        given(employeeRepository.findById(employee.getId())).willReturn(Optional.of(employee));
+        UUID id = employee.getId();
+        when(employeeRepository.findById(id)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findById(employee.getId());
+        Employee foundEmployee = employeeService.findById(id);
 
-        assertThat(foundEmployee).isNotNull();
-        assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
-        assertThat(foundEmployee.getCpf()).isEqualTo(employee.getCpf());
-        assertThat(foundEmployee.getName()).isEqualTo(employee.getName());
+        Assertions.assertThat(foundEmployee).isEqualTo(employee);
     }
 
     @Test
     public void testFindEmployeeByCpf() {
-        given(employeeRepository.findByCPF(employee.getCpf())).willReturn(Optional.of(employee));
+        String cpf = employee.getCpf();
+        when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByCpf(employee.getCpf());
+        Employee foundEmployee = employeeService.findByCpf(cpf);
 
-        assertThat(foundEmployee).isNotNull();
-        assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
-        assertThat(foundEmployee.getCpf()).isEqualTo(employee.getCpf());
-        assertThat(foundEmployee.getName()).isEqualTo(employee.getName());
+        Assertions.assertThat(foundEmployee).isEqualTo(employee);
     }
 
     @Test
     public void testFindEmployeeByName() {
-        given(employeeRepository.findByNameContainsAllIgnoringCase(employee.getName())).willReturn(Optional.of(employee));
+        String name = employee.getName();
+        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByName(employee.getName());
+        Employee foundEmployee = employeeService.findByName(name);
 
-        assertThat(foundEmployee).isNotNull();
-        assertThat(foundEmployee.getId()).isEqualTo(employee.getId());
-        assertThat(foundEmployee.getCpf()).isEqualTo(employee.getCpf());
-        assertThat(foundEmployee.getName()).isEqualTo(employee.getName());
+        Assertions.assertThat(foundEmployee).isEqualTo(employee);
     }
 
     @Test
@@ -90,18 +94,22 @@ public class EmployeeServiceTest {
 
     @Test
     public void testFindEmployeeByCpfNotFound() {
-        String nonExistentCpf = "98765432109";
-        given(employeeRepository.findByCPF(nonExistentCpf)).willReturn(Optional.empty());
+        String cpf = "12345678902";
+        when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> employeeService.findByCpf(nonExistentCpf));
+        assertThrows(ResponseStatusException.class, () -> {
+            employeeService.findByCpf(cpf);
+        });
     }
 
     @Test
     public void testFindEmployeeByNameNotFound() {
-        String nonExistentName = "Nonexistent Name";
-        given(employeeRepository.findByNameContainsAllIgnoringCase(nonExistentName)).willReturn(Optional.empty());
+        String name = "John";
+        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> employeeService.findByName(nonExistentName));
+        assertThrows(ResponseStatusException.class, () -> {
+            employeeService.findByName(name);
+        });
     }
 }
 

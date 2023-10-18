@@ -33,7 +33,7 @@ public class EmployeeService {
     }
 
     public Employee findByCpf(String cpf){
-        Optional<Employee> employee = repository.findByCPF(cpf);
+        Optional<Employee> employee = repository.findBycpf(cpf);
         if(employee.isPresent())
             return employee.get();
         else
@@ -41,7 +41,7 @@ public class EmployeeService {
     }
 
     public Employee findByName(String name){
-        Optional<Employee> employee = repository.findByNameContainsAllIgnoringCase(name);
+        Optional<Employee> employee = repository.findBynameContainsAllIgnoringCase(name);
         if(employee.isPresent())
             return employee.get();
         else
