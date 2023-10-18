@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.joao.neto.msEmployees.model.Employee;
@@ -20,7 +18,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +49,7 @@ public class EmployeeServiceTest {
     Employee createdEmployee = employeeService.create(employee);
 
     Assertions.assertThat(createdEmployee).isEqualTo(employee);
-}
+    }
 
     @Test
     public void testFindEmployeeById() {
@@ -77,7 +74,7 @@ public class EmployeeServiceTest {
     @Test
     public void testFindEmployeeByName() {
         String name = employee.getName();
-        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.of(employee));
 
         Employee foundEmployee = employeeService.findByName(name);
 
@@ -105,11 +102,28 @@ public class EmployeeServiceTest {
     @Test
     public void testFindEmployeeByNameNotFound() {
         String name = "John";
-        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.empty());
+        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> {
             employeeService.findByName(name);
         });
+    }
+
+
+    @Test
+    public void testUpdateBySaveMethod() {
+        Employee employee = new Employee();
+        employee.setName("NomeInicial");
+
+        when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
+            Employee updatedEmployee = invocation.getArgument(0);
+            updatedEmployee.setName("NomeAtualizado");
+            return updatedEmployee;
+        });
+
+        Employee createdEmployee = employeeService.create(employee);
+
+        Assertions.assertThat("NomeAtualizado").isEqualTo(employee.getName());
     }
 }
 
