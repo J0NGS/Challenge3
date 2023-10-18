@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.joao.neto.msEmployees.model.Employee;
@@ -44,11 +46,12 @@ public class EmployeeServiceTest {
             Employee savedEmployee = invocation.getArgument(0);
             savedEmployee.setId(UUID.randomUUID());
             return savedEmployee;
-    });
+        });
 
-    Employee createdEmployee = employeeService.create(employee);
+        ResponseEntity<Employee> createdEmployeeResponse = employeeService.create(employee);
 
-    Assertions.assertThat(createdEmployee).isEqualTo(employee);
+        Assertions.assertThat(createdEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(createdEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -56,9 +59,10 @@ public class EmployeeServiceTest {
         UUID id = employee.getId();
         when(employeeRepository.findById(id)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findById(id);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findById(id);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -66,9 +70,10 @@ public class EmployeeServiceTest {
         String cpf = employee.getCpf();
         when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByCpf(cpf);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByCpf(cpf);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -76,9 +81,10 @@ public class EmployeeServiceTest {
         String name = employee.getName();
         when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByName(name);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByName(name);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -109,21 +115,20 @@ public class EmployeeServiceTest {
         });
     }
 
-
     @Test
     public void testUpdateBySaveMethod() {
-        Employee employee = new Employee();
-        employee.setName("NomeInicial");
+        Employee updatedEmployee = new Employee();
+        updatedEmployee.setName("NomeAtualizado");
 
         when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
-            Employee updatedEmployee = invocation.getArgument(0);
-            updatedEmployee.setName("NomeAtualizado");
-            return updatedEmployee;
+            Employee savedEmployee = invocation.getArgument(0);
+            return savedEmployee; // Simulate the save operation without changing the name
         });
 
-        Employee createdEmployee = employeeService.create(employee);
+        ResponseEntity<Employee> updatedEmployeeResponse = employeeService.update(updatedEmployee);
 
-        Assertions.assertThat("NomeAtualizado").isEqualTo(employee.getName());
+        Assertions.assertThat(updatedEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(updatedEmployeeResponse.getBody().getName()).isEqualTo("NomeAtualizado");
     }
 }
 
