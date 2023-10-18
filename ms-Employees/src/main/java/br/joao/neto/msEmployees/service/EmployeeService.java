@@ -41,10 +41,20 @@ public class EmployeeService {
     }
 
     public Employee findByName(String name){
-        Optional<Employee> employee = repository.findBynameContainsAllIgnoringCase(name);
+        Optional<Employee> employee = repository.findByNameContainingIgnoreCase(name);
         if(employee.isPresent())
             return employee.get();
         else
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "empolyee with name " + name + " not found");
+    }
+
+    public Employee update(Employee employee){
+        Employee updateEmployee = new Employee();
+        updateEmployee.setId(employee.getId());
+        if(!employee.getName().isBlank())
+            updateEmployee.setName(employee.getName());
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "empolyee name is empty");
+        return repository.save(employee);
     }
 }
