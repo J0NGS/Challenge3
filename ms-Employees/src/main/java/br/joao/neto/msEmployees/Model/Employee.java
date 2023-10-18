@@ -1,7 +1,9 @@
-package br.joao.neto.msEmployees.Model;
+package br.joao.neto.msEmployees.model;
 
 import java.util.Date;
 import java.util.UUID;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +30,7 @@ public class Employee {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "cpf", nullable = false)
+    @CPF(message = "Invalid cpf value")
     private String cpf;
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
@@ -36,7 +39,7 @@ public class Employee {
     protected void onCreate() {
         registrationDate = new Date();
     }
-    
+
     public Employee(String name, String cpf) {
         this.name = name;
         this.cpf = cpf;
