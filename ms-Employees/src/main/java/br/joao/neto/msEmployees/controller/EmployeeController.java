@@ -1,5 +1,6 @@
 package br.joao.neto.msEmployees.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.joao.neto.msEmployees.model.Employee;
+import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.service.EmployeeService;
 
 @RestController
@@ -30,8 +33,13 @@ class EmployeeController {
        return service.findById(id);
     }
 
-    @GetMapping("/name={name}")
-    public ResponseEntity<Employee> getByName(@PathVariable("name") String name) {
+    @GetMapping
+    public ResponseEntity<List<Employee>> getByName(@RequestParam("page") int page, @RequestParam("quantity") int qtd) {
+       return service.findAll(page, qtd);
+    }
+
+    @GetMapping("/getByName")
+    public ResponseEntity<List<EmployeeGetResponse>> getByName(@RequestParam("name") String name) {
        return service.findByName(name);
     }
 
@@ -40,8 +48,8 @@ class EmployeeController {
         return service.create(employee);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Employee> update(@PathVariable("id") UUID id, @RequestBody Employee employee) {
-        return service.update(employee);
+    @PutMapping("{id}/{name}")
+    public ResponseEntity<EmployeeGetResponse> update(@PathVariable("id") UUID id, @PathVariable("name") String name) {
+        return service.update(id, name);
     }
 }

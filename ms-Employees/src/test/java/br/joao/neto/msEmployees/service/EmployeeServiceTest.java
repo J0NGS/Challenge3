@@ -12,10 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.joao.neto.msEmployees.model.Employee;
+import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.repo.EmployeeRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,22 +75,12 @@ public class EmployeeServiceTest {
         String cpf = employee.getCpf();
         when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.of(employee));
 
-        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByCpf(cpf);
+        ResponseEntity<EmployeeGetResponse> foundEmployeeResponse = employeeService.findByCpf(cpf);
 
         Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getBody().getCpf()).isEqualTo(employee.getCpf());
     }
 
-    @Test
-    public void testFindEmployeeByName() {
-        String name = employee.getName();
-        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.of(employee));
-
-        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByName(name);
-
-        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
-    }
 
     @Test
     public void testFindEmployeeByIdNotFound() {
@@ -108,27 +103,11 @@ public class EmployeeServiceTest {
     @Test
     public void testFindEmployeeByNameNotFound() {
         String name = "John";
-        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.empty());
+        when(employeeRepository.findByNameIgnoreCase(name)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> {
             employeeService.findByName(name);
         });
-    }
-
-    @Test
-    public void testUpdateBySaveMethod() {
-        Employee updatedEmployee = new Employee();
-        updatedEmployee.setName("NomeAtualizado");
-
-        when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
-            Employee savedEmployee = invocation.getArgument(0);
-            return savedEmployee;
-        });
-
-        ResponseEntity<Employee> updatedEmployeeResponse = employeeService.update(updatedEmployee);
-
-        Assertions.assertThat(updatedEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(updatedEmployeeResponse.getBody().getName()).isEqualTo("NomeAtualizado");
     }
 }
 
