@@ -16,7 +16,7 @@ import br.joao.neto.msEmployees.model.Employee;
 import br.joao.neto.msEmployees.service.EmployeeService;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("employees")
 class EmployeeController {
     private EmployeeService service;
 
@@ -28,6 +28,11 @@ class EmployeeController {
     @GetMapping("{id}")
     public ResponseEntity<Employee> getById(@PathVariable("id") UUID id) {
        return service.findById(id);
+    }
+
+    @GetMapping("/name={name}")
+    public ResponseEntity<Employee> getByName(@PathVariable("name") String name) {
+       return service.findByName(name);
     }
 
     @PostMapping

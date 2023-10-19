@@ -122,7 +122,7 @@ public class EmployeeServiceTest {
 
         when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
             Employee savedEmployee = invocation.getArgument(0);
-            return savedEmployee; // Simulate the save operation without changing the name
+            return savedEmployee;
         });
 
         ResponseEntity<Employee> updatedEmployeeResponse = employeeService.update(updatedEmployee);
