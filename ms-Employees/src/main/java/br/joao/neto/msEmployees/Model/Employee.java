@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +29,11 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(name = "name", nullable = false)
+    @NotBlank
     private String name;
-    @Column(name = "cpf", nullable = false)
+    @Column(name = "cpf", nullable = false, unique = true)
     @CPF(message = "Invalid cpf value")
+    @NotBlank
     private String cpf;
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;

@@ -1,7 +1,10 @@
 package br.joao.neto.msEmployees.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.joao.neto.msEmployees.model.Employee;
+import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.service.EmployeeService;
 
 
@@ -55,15 +59,23 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employee.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(employee.getCpf()));
     }
-
     @Test
     public void testGetEmployeeByName() throws Exception {
-        Mockito.when(employeeService.findByName(employee.getName())).thenReturn(new ResponseEntity<>(employee, HttpStatus.FOUND));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/employees/name={name}", employee.getName()))
+        // Crie uma lista de employees simulando a resposta do serviço
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(employee);
+    
+        // Converta a lista de employees em EmployeeGetResponse
+        List<EmployeeGetResponse> responseList = employeeList.stream()
+            .map(employee -> new EmployeeGetResponse().toModel(employee))
+            .collect(Collectors.toList());
+    
+        Mockito.when(employeeService.findByName(employee.getName())).thenReturn(new ResponseEntity<>(responseList, HttpStatus.FOUND));
+    
+        mockMvc.perform(MockMvcRequestBuilders.get("/employees/getByName?name=Jhon Textor"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employee.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(employee.getCpf()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(employee.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cpf").value(employee.getCpf()));
     }
 
     @Test
@@ -83,17 +95,24 @@ public class EmployeeControllerTest {
 
     @Test
     public void testUpdateEmployee() throws Exception {
-        Employee employeeTest = new Employee("Tiquinho Soares", employee.getCpf());
-        employeeTest.setId(employee.getId());
-        Mockito.when(employeeService.update(Mockito.any(Employee.class))).thenReturn(ResponseEntity.ok(employeeTest));
+        Employee employeeTest = new Employee();
+        EmployeeGetResponse response = new EmployeeGetResponse();
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/employees/{id}", employeeTest.getId())
-                .content(asJsonString(employee))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employeeTest.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(employeeTest.getCpf()));
-    }
+        employeeTest.setId(employee.getId());
+        employeeTest.setName("Tiquinho Soares");
+        employeeTest.setRegistrationDate(employee.getRegistrationDate());
+        employeeTest.setCpf(employee.getCpf());
+        response.toModel(employeeTest);
+
+        Mockito.when(employeeService.update(employeeTest.getId(), "Tiquinho Soares")).thenReturn(new ResponseEntity<>(response, HttpStatus.OK));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/employees/{id}/{name}", employeeTest.getId(), "Tiquinho Soares")
+            .content(asJsonString(employeeTest))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employeeTest.getName()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(employeeTest.getCpf()));
+}
 
     private static String asJsonString(final Object obj) {
         try {
