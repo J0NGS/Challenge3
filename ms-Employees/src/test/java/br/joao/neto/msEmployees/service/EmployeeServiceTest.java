@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.joao.neto.msEmployees.model.Employee;
@@ -20,7 +20,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,21 +46,23 @@ public class EmployeeServiceTest {
             Employee savedEmployee = invocation.getArgument(0);
             savedEmployee.setId(UUID.randomUUID());
             return savedEmployee;
-    });
+        });
 
-    Employee createdEmployee = employeeService.create(employee);
+        ResponseEntity<Employee> createdEmployeeResponse = employeeService.create(employee);
 
-    Assertions.assertThat(createdEmployee).isEqualTo(employee);
-}
+        Assertions.assertThat(createdEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(createdEmployeeResponse.getBody()).isEqualTo(employee);
+    }
 
     @Test
     public void testFindEmployeeById() {
         UUID id = employee.getId();
         when(employeeRepository.findById(id)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findById(id);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findById(id);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -69,19 +70,21 @@ public class EmployeeServiceTest {
         String cpf = employee.getCpf();
         when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByCpf(cpf);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByCpf(cpf);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
     public void testFindEmployeeByName() {
         String name = employee.getName();
-        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.of(employee));
 
-        Employee foundEmployee = employeeService.findByName(name);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByName(name);
 
-        Assertions.assertThat(foundEmployee).isEqualTo(employee);
+        Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        Assertions.assertThat(foundEmployeeResponse.getBody()).isEqualTo(employee);
     }
 
     @Test
@@ -105,11 +108,27 @@ public class EmployeeServiceTest {
     @Test
     public void testFindEmployeeByNameNotFound() {
         String name = "John";
-        when(employeeRepository.findBynameContainsAllIgnoringCase(name)).thenReturn(Optional.empty());
+        when(employeeRepository.findByNameContainingIgnoreCase(name)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> {
             employeeService.findByName(name);
         });
+    }
+
+    @Test
+    public void testUpdateBySaveMethod() {
+        Employee updatedEmployee = new Employee();
+        updatedEmployee.setName("NomeAtualizado");
+
+        when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> {
+            Employee savedEmployee = invocation.getArgument(0);
+            return savedEmployee;
+        });
+
+        ResponseEntity<Employee> updatedEmployeeResponse = employeeService.update(updatedEmployee);
+
+        Assertions.assertThat(updatedEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(updatedEmployeeResponse.getBody().getName()).isEqualTo("NomeAtualizado");
     }
 }
 

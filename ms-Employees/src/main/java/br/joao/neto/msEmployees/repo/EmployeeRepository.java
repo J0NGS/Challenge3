@@ -9,5 +9,5 @@ import br.joao.neto.msEmployees.model.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, UUID>{
     Optional<Employee> findBycpf(String cpf);
-    Optional<Employee> findBynameContainsAllIgnoringCase(String name);
+    Optional<Employee> findByNameContainingIgnoreCase(String name);
 }
