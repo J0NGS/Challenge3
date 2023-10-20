@@ -32,6 +32,9 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Employee> create(Employee employee){
+        String cpf = employee.getCpf().replaceAll("[^0-9]", "");       
+        employee.setCpf(cpf);
+        
         if(repository.existsByCpf(employee.getCpf()))
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "CPF already exists");
         return new ResponseEntity<>(repository.save(employee), HttpStatus.CREATED);
