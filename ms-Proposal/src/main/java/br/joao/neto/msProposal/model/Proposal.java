@@ -30,7 +30,6 @@ public class Proposal {
     private String title;
 
     @Column(name = "author_id", nullable = false)
-    @org.hibernate.validator.constraints.UUID(message = "invalid UUID")
     private UUID authorId;
 
     @Column(name = "description", nullable = false)
@@ -39,7 +38,6 @@ public class Proposal {
     private String description;
 
     @Column(name = "timer", nullable = false)
-    @NotEmpty
     private Integer timer;
 
     @Column(name = "votes_approved")
