@@ -14,6 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID>{
     boolean existsByCpf(String cpf);
     Optional<Employee> findBycpf(String cpf);
     Optional<List<Employee>> findByNameIgnoreCase(String name);
-    Optional<List<Employee>> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Optional<List<Employee>> findByNameContainingIgnoreCase(String name);
     Page<Employee> findAll(Pageable pageable);
 }
