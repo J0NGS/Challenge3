@@ -35,7 +35,7 @@ public class ProposalServiceTest {
 
     @Test
     void testCreateProposal() {
-        Proposal proposal = new Proposal("Test Proposal", "Description", 5, 0, 0);
+        Proposal proposal = new Proposal("Test Proposal", "Description", 5);
 
         Mockito.when(proposalRepository.existsByTitleIgnoreCase("Test Proposal")).thenReturn(false);
         Mockito.when(proposalRepository.save(proposal)).thenReturn(proposal);
@@ -48,7 +48,7 @@ public class ProposalServiceTest {
 
     @Test
     void testCreateProposalWithTitleAlreadyExists() {
-        Proposal proposal = new Proposal("Existing Proposal", "Description", 5, 0, 0);
+        Proposal proposal = new Proposal("Existing Proposal", "Description", 5);
 
         Mockito.when(proposalRepository.existsByTitleIgnoreCase("Existing Proposal")).thenReturn(true);
 
@@ -58,7 +58,7 @@ public class ProposalServiceTest {
     @Test
     void testLearnVoteApproved() {
         UUID proposalId = UUID.randomUUID();
-        Proposal proposal = new Proposal("Test Proposal", "Description", 5, 0, 0);
+        Proposal proposal = new Proposal("Test Proposal", "Description", 5);
 
         Mockito.when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
 
@@ -71,7 +71,7 @@ public class ProposalServiceTest {
     @Test
     void testLearnVoteRejected() {
         UUID proposalId = UUID.randomUUID();
-        Proposal proposal = new Proposal("Test Proposal", "Description", 5, 0, 0);
+        Proposal proposal = new Proposal("Test Proposal", "Description", 5);
 
         Mockito.when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
 
@@ -93,7 +93,7 @@ public class ProposalServiceTest {
     @Test
     void testGetResult() {
         String title = "Test Proposal";
-        Proposal proposal = new Proposal(title, "Description", 5, 2, 1);
+        Proposal proposal = new Proposal(title, "Description", 5);
 
         Mockito.when(proposalRepository.existsByTitleIgnoreCase(title)).thenReturn(true);
         Mockito.when(proposalRepository.findByTitleIgnoreCase(title)).thenReturn(Optional.of(proposal));
