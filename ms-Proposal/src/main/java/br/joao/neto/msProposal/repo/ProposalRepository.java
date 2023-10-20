@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, UUID>{
     boolean existsByTitleIgnoreCase(String title);
-    Optional<List<Proposal>> findByAuthorIdIgnoreCaseAndNoAccent(UUID authorId);
+    Optional<List<Proposal>> findByAuthorId(UUID authorId);
     Page<Proposal> findAll(Pageable pageable);
     Optional<Proposal> findByTitleIgnoreCase(String title);
 }

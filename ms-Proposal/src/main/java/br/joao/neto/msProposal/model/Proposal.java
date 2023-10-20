@@ -51,9 +51,8 @@ public class Proposal {
     @Column(name = "finished", nullable = false)
     private boolean finished;
 
-    public Proposal(String title,UUID authorId,String description, Integer timer, Integer votesApproved, Integer votesRejected) {
+    public Proposal(String title,String description, Integer timer, Integer votesApproved, Integer votesRejected) {
         this.title = title;
-        this.authorId = authorId;
         this.description = description;
         this.timer = timer;
         this.votesApproved = votesApproved;

@@ -27,6 +27,16 @@
             "projectName": "ms-CloudGateway",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MsProposalApplication<msProposal>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.joao.neto.msProposal.MsProposalApplication",
+            "projectName": "msProposal",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
