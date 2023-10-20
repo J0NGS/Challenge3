@@ -21,5 +21,4 @@ public class EmployeeGetResponse {
         this.cpf = employee.getCpf();
         return this;
     }
-
 }

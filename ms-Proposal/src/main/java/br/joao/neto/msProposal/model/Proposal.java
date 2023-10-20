@@ -30,8 +30,10 @@ public class Proposal {
     private String title;
 
     @Column(name = "author_id", nullable = false)
-    @org.hibernate.validator.constraints.UUID(message = "invalid UUID")
     private UUID authorId;
+
+    @Column(name = "session_id", nullable = true)
+    private UUID sessionId;
 
     @Column(name = "description", nullable = false)
     @Size(max = 400, message = "max 400 caracters")
@@ -51,12 +53,12 @@ public class Proposal {
     @Column(name = "finished", nullable = false)
     private boolean finished;
 
-    public Proposal(String title,String description, Integer timer, Integer votesApproved, Integer votesRejected) {
+    public Proposal(String title,String description, Integer timer) {
         this.title = title;
         this.description = description;
         this.timer = timer;
-        this.votesApproved = votesApproved;
-        this.votesRejected = votesRejected;
+        this.votesApproved = 0;
+        this.votesRejected = 0;
         this.finished = false;
     }
 }
