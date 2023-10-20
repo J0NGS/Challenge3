@@ -38,6 +38,11 @@ class EmployeeController {
        return service.findAll(page, qtd);
     }
 
+    @GetMapping
+    public ResponseEntity<Employee> getByCpf(@RequestParam("cpf") String cpf) {
+       return service.findByCpf(cpf);
+    }
+
     @GetMapping("/getByName")
     public ResponseEntity<List<EmployeeGetResponse>> getByName(@RequestParam("name") String name) {
        return service.findByName(name);

@@ -39,15 +39,14 @@ public class EmployeeService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with id [ " + id + " ] not found"));
     }
 
-    public ResponseEntity<EmployeeGetResponse> findByCpf(String cpf){
+    public ResponseEntity<Employee> findByCpf(String cpf){
         Optional<Employee> employee = repository.findBycpf(cpf);
-        EmployeeGetResponse response = new EmployeeGetResponse();
-        return employee.map(emp -> new ResponseEntity<>(response.toModel(emp), HttpStatus.FOUND))
+        return employee.map(emp -> new ResponseEntity<>(emp, HttpStatus.FOUND))
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with cpf [ " + cpf + " ] not found"));
     }
 
     public ResponseEntity<List<EmployeeGetResponse>> findByName(String name){
-        Optional<List<Employee>> employee = repository.findByNameIgnoreCase(name);
+        Optional<List<Employee>> employee = repository.findByNameContainingIgnoreCase(name);
         EmployeeGetResponse response = new EmployeeGetResponse();
         if (employee.isPresent()){
             List<EmployeeGetResponse> list = new ArrayList<>();

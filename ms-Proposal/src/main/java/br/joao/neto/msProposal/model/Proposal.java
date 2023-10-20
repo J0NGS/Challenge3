@@ -41,7 +41,6 @@ public class Proposal {
     private String description;
 
     @Column(name = "timer", nullable = false)
-    @NotEmpty
     private Integer timer;
 
     @Column(name = "votes_approved")
