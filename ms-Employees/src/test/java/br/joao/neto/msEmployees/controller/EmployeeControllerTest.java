@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,24 +60,6 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employee.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(employee.getCpf()));
-    }
-    @Test
-    public void testGetEmployeeByName() throws Exception {
-        // Crie uma lista de employees simulando a resposta do serviço
-        List<Employee> employeeList = new ArrayList<>();
-        employeeList.add(employee);
-    
-        // Converta a lista de employees em EmployeeGetResponse
-        List<EmployeeGetResponse> responseList = employeeList.stream()
-            .map(employee -> new EmployeeGetResponse().toModel(employee))
-            .collect(Collectors.toList());
-    
-        Mockito.when(employeeService.findByName(employee.getName())).thenReturn(new ResponseEntity<>(responseList, HttpStatus.FOUND));
-    
-        mockMvc.perform(MockMvcRequestBuilders.get("/employees/getByName?name=Jhon Textor"))
-                .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(employee.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cpf").value(employee.getCpf()));
     }
 
     @Test

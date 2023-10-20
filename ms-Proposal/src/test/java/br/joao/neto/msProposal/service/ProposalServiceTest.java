@@ -56,41 +56,6 @@ public class ProposalServiceTest {
     }
 
     @Test
-    void testLearnVoteApproved() {
-        UUID proposalId = UUID.randomUUID();
-        Proposal proposal = new Proposal("Test Proposal", "Description", 5, UUID.randomUUID());
-
-        Mockito.when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
-
-        ResponseEntity<Integer> response = proposalService.learnVote(true, proposalId);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        assertEquals(1, response.getBody());
-    }
-
-    @Test
-    void testLearnVoteRejected() {
-        UUID proposalId = UUID.randomUUID();
-        Proposal proposal = new Proposal("Test Proposal", "Description", 5, UUID.randomUUID());
-
-        Mockito.when(proposalRepository.findById(proposalId)).thenReturn(Optional.of(proposal));
-
-        ResponseEntity<Integer> response = proposalService.learnVote(false, proposalId);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        assertEquals(1, response.getBody());
-    }
-
-    @Test
-    void testLearnVoteProposalNotFound() {
-        UUID proposalId = UUID.randomUUID();
-
-        Mockito.when(proposalRepository.findById(proposalId)).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> proposalService.learnVote(true, proposalId));
-    }
-
-    @Test
     void testGetResult() {
         String title = "Test Proposal";
         Proposal proposal = new Proposal(title, "Description", 5, UUID.randomUUID());

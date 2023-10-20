@@ -30,6 +30,7 @@ public class ProposalService {
         return new ResponseEntity<>(repository.save(proposal), HttpStatus.CREATED);
     }
 
+
     public ResponseEntity<Integer> learnVote(Votes vote, UUID idProposal) {
         Proposal proposal = repository.findById(idProposal).orElseThrow(() -> 
         new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));

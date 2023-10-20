@@ -32,6 +32,9 @@ public class EmployeeService {
     }
 
     public ResponseEntity<Employee> create(Employee employee){
+        String cpf = employee.getCpf().replaceAll("[^0-9]", "");       
+        employee.setCpf(cpf);
+        
         if(repository.existsByCpf(employee.getCpf()))
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "CPF already exists");
         return new ResponseEntity<>(repository.save(employee), HttpStatus.CREATED);
@@ -49,17 +52,14 @@ public class EmployeeService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with cpf [ " + cpf + " ] not found"));
     }
 
-    public ResponseEntity<List<EmployeeGetResponse>> findByName(String name){
-        Optional<List<Employee>> employee = repository.findByNameContainingIgnoreCase(name);
-        EmployeeGetResponse response = new EmployeeGetResponse();
-        if (employee.isPresent()){
-            List<EmployeeGetResponse> list = new ArrayList<>();
-            for (Employee emp : employee.get()) {
-                list.add(response.toModel(emp));
-            }
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with name [ " + name + " ] not found");
+    public ResponseEntity<Page<EmployeeGetResponse>> findByName(String name, int page, int pageSize) {
+        Page<Employee> employees = repository.findByNameContainingIgnoreCase(name, PageRequest.of(page, pageSize));
+
+        if (employees.hasContent()) {
+            Page<EmployeeGetResponse> responsePage = employees.map(employee -> new EmployeeGetResponse().toModel(employee));
+            return new ResponseEntity<>(responsePage, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employees with name [" + name + "] not found");
         }
     }
 
