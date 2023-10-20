@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,8 +46,11 @@ class EmployeeController {
     }
 
     @GetMapping("/getByName")
-    public ResponseEntity<List<EmployeeGetResponse>> getByName(@RequestParam("name") String name) {
-       return service.findByName(name);
+    public ResponseEntity<Page<EmployeeGetResponse>> getByName(
+        @RequestParam("name") String name,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return service.findByName(name, page, pageSize);
     }
 
     @PostMapping

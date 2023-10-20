@@ -100,15 +100,6 @@ public class EmployeeServiceTest {
         });
     }
 
-    @Test
-    public void testFindEmployeeByNameNotFound() {
-        String name = "John";
-        when(employeeRepository.findByNameIgnoreCase(name)).thenReturn(Optional.empty());
-
-        assertThrows(ResponseStatusException.class, () -> {
-            employeeService.findByName(name);
-        });
-    }
 }
 
 
