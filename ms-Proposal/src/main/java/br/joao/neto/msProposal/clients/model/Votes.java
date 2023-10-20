@@ -14,7 +14,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Entity
 @EqualsAndHashCode
 public class Votes implements Serializable {
     private UUID id;

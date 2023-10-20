@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.joao.neto.msEmployees.client.ProposalResource;
+import br.joao.neto.msEmployees.client.model.Proposal;
 import br.joao.neto.msEmployees.model.Employee;
 import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.repo.EmployeeRepository;
@@ -21,10 +23,12 @@ import br.joao.neto.msEmployees.repo.EmployeeRepository;
 @Service
 public class EmployeeService {
     private EmployeeRepository repository;
+    private ProposalResource proposalResource;
 
     @Autowired
-    public EmployeeService(EmployeeRepository repository) {
+    public EmployeeService(EmployeeRepository repository, ProposalResource proposalResource) {
         this.repository = repository;
+        this.proposalResource = proposalResource;
     }
 
     public ResponseEntity<Employee> create(Employee employee){
@@ -83,6 +87,18 @@ public class EmployeeService {
             return new ResponseEntity<>(response.toModel(updateEmployee), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "name is empty");
+        }
+    }
+
+    public ResponseEntity<Proposal> createProposal(String cpf, String title, String description, Integer timer){
+        if(repository.existsByCpf(cpf)){
+            Employee employee = repository.findBycpf(cpf).get();
+            Proposal proposal = new Proposal(title, description, timer, employee.getId());
+            
+            ResponseEntity<Proposal> result = proposalResource.create(proposal);
+            return result;
+        }else { 
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with [ "+ cpf +" ] is not found");
         }
     }
 }

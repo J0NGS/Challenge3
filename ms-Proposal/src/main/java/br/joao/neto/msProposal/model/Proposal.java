@@ -32,9 +32,6 @@ public class Proposal {
     @Column(name = "author_id", nullable = false)
     private UUID authorId;
 
-    @Column(name = "session_id", nullable = true)
-    private UUID sessionId;
-
     @Column(name = "description", nullable = false)
     @Size(max = 400, message = "max 400 caracters")
     @NotBlank
@@ -52,10 +49,13 @@ public class Proposal {
     @Column(name = "finished", nullable = false)
     private boolean finished;
 
-    public Proposal(String title,String description, Integer timer) {
+    public Proposal(String title,String description, Integer timer, UUID authorId) {
         this.title = title;
+        this.authorId = authorId;
         this.description = description;
-        this.timer = timer;
+        if(timer == null || timer.equals(0) || timer <0)
+            timer = 1;
+        this.timer = timer * 60000;
         this.votesApproved = 0;
         this.votesRejected = 0;
         this.finished = false;

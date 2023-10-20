@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@Entity
 public class Employee {
     private UUID id;
     private String name;
