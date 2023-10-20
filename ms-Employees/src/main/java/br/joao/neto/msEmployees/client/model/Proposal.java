@@ -16,10 +16,15 @@ public class Proposal {
     private UUID id;
     private String title;
     private UUID authorId;
-    private UUID sessionId;
     private String description;
     private Integer timer;
-    private Integer votesApproved;
-    private Integer votesRejected;
-    private boolean finished;
+    
+    public Proposal(String title, String description, Integer timer, UUID authorId) {
+        this.title = title;
+        this.description = description;
+        this.timer = timer;
+        this.authorId = authorId;
+    }
+
+    
 }

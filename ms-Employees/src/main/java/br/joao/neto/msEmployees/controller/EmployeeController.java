@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.joao.neto.msEmployees.client.model.Proposal;
 import br.joao.neto.msEmployees.model.Employee;
 import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.service.EmployeeService;
@@ -34,11 +35,11 @@ class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getByName(@RequestParam("page") int page, @RequestParam("quantity") int qtd) {
+    public ResponseEntity<List<Employee>> getAll(@RequestParam("page") int page, @RequestParam("quantity") int qtd) {
        return service.findAll(page, qtd);
     }
 
-    @GetMapping
+    @GetMapping("/getByCpf")
     public ResponseEntity<Employee> getByCpf(@RequestParam("cpf") String cpf) {
        return service.findByCpf(cpf);
     }
@@ -51,6 +52,11 @@ class EmployeeController {
     @PostMapping
     public ResponseEntity<Employee> create(@RequestBody Employee employee) {
         return service.create(employee);
+    }
+
+    @PostMapping("/proposal")
+    public ResponseEntity<Proposal> createProposal(@RequestParam("cpf") String cpf, @RequestBody Proposal proposal) {
+        return service.createProposal(cpf, proposal.getTitle(), proposal.getDescription(), proposal.getTimer());
     }
 
     @PutMapping("{id}/{name}")

@@ -75,7 +75,7 @@ public class EmployeeServiceTest {
         String cpf = employee.getCpf();
         when(employeeRepository.findBycpf(cpf)).thenReturn(Optional.of(employee));
 
-        ResponseEntity<EmployeeGetResponse> foundEmployeeResponse = employeeService.findByCpf(cpf);
+        ResponseEntity<Employee> foundEmployeeResponse = employeeService.findByCpf(cpf);
 
         Assertions.assertThat(foundEmployeeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         Assertions.assertThat(foundEmployeeResponse.getBody().getCpf()).isEqualTo(employee.getCpf());
