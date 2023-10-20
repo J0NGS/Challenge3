@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.joao.neto.msProposal.clients.model.Votes;
 import br.joao.neto.msProposal.model.Proposal;
 import br.joao.neto.msProposal.model.DTO.Result;
 import br.joao.neto.msProposal.repo.ProposalRepository;
@@ -29,11 +30,11 @@ public class ProposalService {
         return new ResponseEntity<>(repository.save(proposal), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Integer> learnVote(boolean vote, UUID idProposal) {
+    public ResponseEntity<Integer> learnVote(Votes vote, UUID idProposal) {
         Proposal proposal = repository.findById(idProposal).orElseThrow(() -> 
         new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
 
-        if (vote){
+        if (vote.isVote()){
             proposal.setVotesApproved(proposal.getVotesApproved() + 1);
             return new ResponseEntity<Integer>(proposal.getVotesApproved(), HttpStatus.ACCEPTED);
         }else{ 
