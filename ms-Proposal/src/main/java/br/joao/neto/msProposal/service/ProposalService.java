@@ -51,4 +51,21 @@ public class ProposalService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found");
         }
     }
+
+    public ResponseEntity<Proposal> getById(UUID uuid){
+        Proposal proposal = repository.findById(uuid).orElseThrow(() -> 
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
+        return new ResponseEntity<Proposal>(proposal, HttpStatus.FOUND);
+    }
+
+    @Transactional
+    public ResponseEntity<Result> updateStatus(UUID uuid) {
+        Proposal proposal = repository.findById(uuid).orElseThrow(() -> 
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
+        proposal.setFinished(!proposal.isFinished());
+        repository.save(proposal);
+        Result result = new Result();
+        result = result.toModel(proposal);
+        return new ResponseEntity(result, HttpStatus.ACCEPTED);
+    }
 }
