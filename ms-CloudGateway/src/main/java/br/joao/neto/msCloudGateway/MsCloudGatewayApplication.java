@@ -19,6 +19,7 @@ public class MsCloudGatewayApplication {
 		return builder.
 			routes()
 			.route(r -> r.path("/employees/**").uri("lb://msEmployee"))
+			.route(r -> r.path("/proposals/**").uri("lb://msProposal"))
 		.build();
 	}
 }
