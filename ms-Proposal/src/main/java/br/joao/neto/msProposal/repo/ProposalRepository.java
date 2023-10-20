@@ -13,7 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, UUID>{
-    boolean existsByTitleIgnoreCase();
+    boolean existsByTitleIgnoreCase(String title);
     Optional<List<Proposal>> findByAuthorIdIgnoreCaseAndNoAccent(UUID authorId);
     Page<Proposal> findAll(Pageable pageable);
-    }
+    Optional<Proposal> findByTitleIgnoreCase(String title);
+}

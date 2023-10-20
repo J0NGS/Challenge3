@@ -26,7 +26,7 @@ public class Proposal {
     private UUID id;
 
     @NotBlank
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Column(name = "author_id", nullable = false)
@@ -48,6 +48,9 @@ public class Proposal {
     @Column(name = "votes_rejected")
     private Integer votesRejected;
 
+    @Column(name = "finished", nullable = false)
+    private boolean finished;
+
     public Proposal(String title,UUID authorId,String description, Integer timer, Integer votesApproved, Integer votesRejected) {
         this.title = title;
         this.authorId = authorId;
@@ -55,5 +58,6 @@ public class Proposal {
         this.timer = timer;
         this.votesApproved = votesApproved;
         this.votesRejected = votesRejected;
+        this.finished = false;
     }
 }
