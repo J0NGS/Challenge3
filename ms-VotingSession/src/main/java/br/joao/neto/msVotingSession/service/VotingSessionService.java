@@ -20,14 +20,12 @@ import jakarta.transaction.Transactional;
 @Service
 public class VotingSessionService {
     private VotingSessionRepository repository;
-    private VotingSessionRepository votingRepository;
     
 
     @Autowired
-    public VotingSessionService(VotingSessionRepository repository, VotingSessionRepository votingRepository) {
+    public VotingSessionService(VotingSessionRepository repository) {
         this.repository = repository;
-        this.votingRepository = votingRepository;
-    }
+   }
 
     @Transactional
     public ResponseEntity<VotingSession> createVotingSession(VotingSession votingSession) {
@@ -41,7 +39,8 @@ public class VotingSessionService {
     }
 
     public ResponseEntity<Page<VotingSession>> getAllVotingSessions(int page, int size) {
-        Page<VotingSession> votingSessionsPage = repository.findAll(PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<VotingSession> votingSessionsPage = repository.findAll(pageable);
         return new ResponseEntity<>(votingSessionsPage, HttpStatus.OK);
     }
 }

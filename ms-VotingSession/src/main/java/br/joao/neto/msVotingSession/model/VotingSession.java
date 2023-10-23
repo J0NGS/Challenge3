@@ -37,7 +37,7 @@ public class VotingSession implements Serializable {
     private UUID proposalId;
 
     @Column(name = "votes")
-    @OneToMany(mappedBy = "votingSessionId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "votingSession", cascade = CascadeType.ALL)
     private List<Votes> votes;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -46,5 +46,9 @@ public class VotingSession implements Serializable {
     @PrePersist
     protected void onCreate() {
         sessionDate = new Date();
+    }
+
+    public VotingSession(UUID proposalId) {
+        this.proposalId = proposalId;
     }
 }

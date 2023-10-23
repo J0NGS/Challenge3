@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.joao.neto.msProposal.clients.VotingSessionResource;
 import br.joao.neto.msProposal.clients.model.Votes;
+import br.joao.neto.msProposal.clients.model.VotingSession;
 import br.joao.neto.msProposal.model.Proposal;
 import br.joao.neto.msProposal.model.DTO.Result;
 import br.joao.neto.msProposal.repo.ProposalRepository;
@@ -17,14 +19,18 @@ import jakarta.transaction.Transactional;
 @Service
 public class ProposalService {
     private ProposalRepository repository;
+    private VotingSessionResource votingSessionResources;
     
     @Autowired
-    public ProposalService(ProposalRepository repository) {
+    public ProposalService(ProposalRepository repository, VotingSessionResource votingSessionResources) {
         this.repository = repository;
+        this.votingSessionResources = votingSessionResources;
     }
 
     @Transactional
     public ResponseEntity<Proposal> create(Proposal proposal) {
+        proposal.setVotesRejected(0);
+        proposal.setVotesApproved(0);
         if(repository.existsByTitleIgnoreCase(proposal.getTitle()))
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Title already exists");
         return new ResponseEntity<>(repository.save(proposal), HttpStatus.CREATED);
@@ -69,5 +75,13 @@ public class ProposalService {
         Result result = new Result();
         result = result.toModel(proposal);
         return new ResponseEntity(result, HttpStatus.ACCEPTED);
+    }
+
+    public ResponseEntity<VotingSession> openVotingSession(UUID uuid) {
+        Proposal proposal = repository.findById(uuid).orElseThrow(() -> 
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
+        VotingSession votingSession = new VotingSession();
+        votingSession.setProposalId(proposal.getId());
+        return votingSessionResources.createVotingSession(votingSession);
     }
 }
