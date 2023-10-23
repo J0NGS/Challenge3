@@ -56,8 +56,6 @@ public class Proposal {
         if(timer == null || timer.equals(0) || timer <0)
             timer = 1;
         this.timer = timer * 60000;
-        this.votesApproved = 0;
-        this.votesRejected = 0;
         this.finished = false;
     }
 }
