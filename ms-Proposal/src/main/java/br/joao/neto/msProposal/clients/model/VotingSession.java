@@ -18,5 +18,5 @@ public class VotingSession {
     private UUID id;
     private UUID proposalId;
     private List<Votes> votes;
-    private Date sessionDate;
+    private Date sessionDateOver;
 }

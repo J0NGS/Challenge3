@@ -1,5 +1,8 @@
 package br.joao.neto.msProposal.service;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +84,13 @@ public class ProposalService {
         Proposal proposal = repository.findById(uuid).orElseThrow(() -> 
             new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
         VotingSession votingSession = new VotingSession();
+        
+        votingSession.setSessionDateOver(new Date());
+        Instant dateInstant = votingSession.getSessionDateOver().toInstant();
+        dateInstant = dateInstant.plus(Duration.ofMinutes(proposal.getTimer()));
+        Date dateSessionOver = Date.from(dateInstant);
+        votingSession.setSessionDateOver(dateSessionOver);
+        
         votingSession.setProposalId(proposal.getId());
         return votingSessionResources.createVotingSession(votingSession);
     }
