@@ -1,9 +1,7 @@
 package br.joao.neto.msProposal.clients.model;
 
-import java.io.Serializable;
 import java.util.UUID;
 
-import jakarta.persistence.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

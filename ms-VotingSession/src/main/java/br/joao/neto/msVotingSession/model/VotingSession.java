@@ -41,12 +41,7 @@ public class VotingSession implements Serializable {
     private List<Votes> votes;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date sessionDate;
-
-    @PrePersist
-    protected void onCreate() {
-        sessionDate = new Date();
-    }
+    private Date sessionDateOver;
 
     public VotingSession(UUID proposalId) {
         this.proposalId = proposalId;

@@ -1,6 +1,5 @@
 package br.joao.neto.msVotingSession.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
