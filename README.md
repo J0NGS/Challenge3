@@ -8,8 +8,10 @@ Currently, the project is organized with 5 microservices, but only 4 are functio
 1. Register an employee.
 2. Search for employees by ID, name, or CPF.
 3. Create a proposal for improvement via an employee (openFeing).
+4. Open a voting session (openFeing).
+5. Vote (openFeing).
 
-I am still working on finalizing the project, where a voting session will be opened, and the results will be counted.
+I am working on finalizing the project, where the voting results will be calculated, and some refactorings will be implemented.
 
 ## Installation and Usage
 
@@ -18,4 +20,5 @@ I am still working on finalizing the project, where a voting session will be ope
 3. Navigate to the cloud gateway folder and run it.
 4. Run all the other services.
 
-Feel free to explore the individual microservices and their respective documentation for more details on how to use each of them.
+Feel free to explore the individual microservices and their respective documentation for more details on how to use them.
+
