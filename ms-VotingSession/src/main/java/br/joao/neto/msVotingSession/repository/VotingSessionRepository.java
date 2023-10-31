@@ -17,4 +17,5 @@ import java.util.Optional;
 public interface VotingSessionRepository extends JpaRepository<VotingSession, UUID> {
     Page<VotingSession> findAll(Pageable pageable);
     Optional<VotingSession> findById(UUID id);
+    Optional<VotingSession> findByProposalId(UUID votingSession);
 }

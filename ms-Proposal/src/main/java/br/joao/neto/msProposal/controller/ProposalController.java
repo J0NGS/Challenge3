@@ -31,6 +31,11 @@ public class ProposalController {
         return service.getResult(title);
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<Proposal> getByTitle(@RequestParam("title") String title) {
+        return service.getByTitle(title);
+    }
+
     @PostMapping("/votingSession")
     public ResponseEntity<VotingSession> openVotingSession(@RequestParam UUID uuid) {
         return service.openVotingSession(uuid);

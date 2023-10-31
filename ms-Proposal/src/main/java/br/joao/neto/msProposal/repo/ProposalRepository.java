@@ -17,4 +17,5 @@ public interface ProposalRepository extends JpaRepository<Proposal, UUID>{
     Optional<List<Proposal>> findByAuthorId(UUID authorId);
     Page<Proposal> findAll(Pageable pageable);
     Optional<Proposal> findByTitleIgnoreCase(String title);
+    Optional<Proposal> findByTitle(String title);
 }

@@ -27,7 +27,7 @@ import lombok.*;
 @Entity
 @EqualsAndHashCode
 @Table(name = "votingsessionmodel")
-public class VotingSession implements Serializable {
+public class VotingSession{
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     @Column(name = "id_voting_session")
