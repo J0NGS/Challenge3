@@ -46,10 +46,10 @@ public class ProposalService {
 
         if (vote.isVote()){
             proposal.setVotesApproved(proposal.getVotesApproved() + 1);
-            return new ResponseEntity<Integer>(proposal.getVotesApproved(), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(proposal.getVotesApproved(), HttpStatus.ACCEPTED);
         }else{ 
             proposal.setVotesRejected(proposal.getVotesRejected() + 1);
-            return new ResponseEntity<Integer>(proposal.getVotesRejected(), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(proposal.getVotesRejected(), HttpStatus.ACCEPTED);
         } 
     }
 
@@ -57,17 +57,26 @@ public class ProposalService {
         if(repository.existsByTitleIgnoreCase(title)){
             Result result = new Result(); 
             result = result.toModel(repository.findByTitleIgnoreCase(title).get());
-            return new ResponseEntity<Result>(result, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }else{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found");
         }
     }
 
+
     public ResponseEntity<Proposal> getById(UUID uuid){
         Proposal proposal = repository.findById(uuid).orElseThrow(() -> 
             new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
-        return new ResponseEntity<Proposal>(proposal, HttpStatus.FOUND);
+        return new ResponseEntity<>(proposal, HttpStatus.FOUND);
     }
+
+
+    public ResponseEntity<Proposal> getByTitle(String title){
+        Proposal proposal = repository.findByTitle(title).orElseThrow(() -> 
+           new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposal not found"));
+        return new ResponseEntity<>(proposal, HttpStatus.OK);
+    }
+
 
     @Transactional
     public ResponseEntity<Result> updateStatus(UUID uuid) {
@@ -77,7 +86,7 @@ public class ProposalService {
         repository.save(proposal);
         Result result = new Result();
         result = result.toModel(proposal);
-        return new ResponseEntity(result, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
     }
 
     public ResponseEntity<VotingSession> openVotingSession(UUID uuid) {

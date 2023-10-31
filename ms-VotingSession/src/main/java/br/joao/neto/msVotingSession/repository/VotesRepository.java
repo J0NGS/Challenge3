@@ -13,6 +13,9 @@ import br.joao.neto.msVotingSession.model.VotingSession;
 
 @Repository
 public interface VotesRepository extends JpaRepository<Votes, UUID> {
-    List<Votes> findByvotingSession(VotingSession votingSessionId);
+    List<Votes> findByVotingSession(VotingSession votingSessionId);
+    Votes findByEmployeeIdAndVotingSession(UUID employeeId, VotingSession votingSessionId);
     Page<Votes> findByVotingSession(VotingSession votingSession, Pageable pageable);
+    boolean existsByEmployeeId(UUID employeeId);
+    boolean existsByEmployeeIdAndVotingSession(UUID employeeId, VotingSession votingSessionId);
 }

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.joao.neto.msEmployees.client.model.Proposal;
+import br.joao.neto.msEmployees.client.model.Votes;
+import br.joao.neto.msEmployees.client.model.VotesResponse;
 import br.joao.neto.msEmployees.model.Employee;
 import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.service.EmployeeService;
@@ -61,6 +63,12 @@ class EmployeeController {
     @PostMapping("/proposal")
     public ResponseEntity<Proposal> createProposal(@RequestParam("cpf") String cpf, @RequestBody Proposal proposal) {
         return service.createProposal(cpf, proposal.getTitle(), proposal.getDescription(), proposal.getTimer());
+    }
+
+
+    @PostMapping("/vote")
+    public ResponseEntity<VotesResponse> createVote(@RequestParam("cpf") String cpf, @RequestParam("title") String title, @RequestParam("vote") Boolean vote) {
+        return service.Voting(cpf, title, vote);
     }
 
     @PutMapping("{id}/{name}")

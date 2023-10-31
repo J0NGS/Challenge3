@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.joao.neto.msVotingSession.model.Votes;
+import br.joao.neto.msVotingSession.model.DTO.VoteRequest;
+import br.joao.neto.msVotingSession.model.DTO.VotesResponse;
 import br.joao.neto.msVotingSession.service.VotesService;
 
 @RestController
@@ -27,7 +29,7 @@ public class VotesController {
     }
 
     @PostMapping
-    public ResponseEntity<Votes> createVote(@RequestBody Votes vote) {
+    public ResponseEntity<VotesResponse> createVote(@RequestBody VoteRequest vote) {
         return votesService.createVote(vote);
     }
 

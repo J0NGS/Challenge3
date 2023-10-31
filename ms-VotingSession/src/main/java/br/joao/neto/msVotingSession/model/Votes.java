@@ -22,7 +22,7 @@ import lombok.*;
 @Entity
 @EqualsAndHashCode
 @Table(name = "votes")
-public class Votes implements Serializable {
+public class Votes{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -31,9 +31,15 @@ public class Votes implements Serializable {
     @JoinColumn(name = "voting_session_id", nullable = false)
     private VotingSession votingSession;
 
-    @Column(name = "employee_id", nullable = false, unique = true)
+    @Column(name = "employee_id", nullable = false)
     private UUID employeeId;
 
     @Column(name = "voteBool", nullable = false)
     private boolean vote;
+
+    public Votes(UUID employeId, UUID votingSession, boolean vote){
+        this.employeeId = employeId;
+        this.votingSession.setId(votingSession);
+        this.vote = vote;
+    }
 }
