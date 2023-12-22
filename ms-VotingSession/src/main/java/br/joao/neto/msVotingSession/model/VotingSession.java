@@ -27,7 +27,7 @@ import lombok.*;
 @Entity
 @EqualsAndHashCode
 @Table(name = "votingsessionmodel")
-public class VotingSession implements Serializable {
+public class VotingSession{
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     @Column(name = "id_voting_session")
@@ -37,14 +37,13 @@ public class VotingSession implements Serializable {
     private UUID proposalId;
 
     @Column(name = "votes")
-    @OneToMany(mappedBy = "votingSessionId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "votingSession", cascade = CascadeType.ALL)
     private List<Votes> votes;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date sessionDate;
+    private Date sessionDateOver;
 
-    @PrePersist
-    protected void onCreate() {
-        sessionDate = new Date();
+    public VotingSession(UUID proposalId) {
+        this.proposalId = proposalId;
     }
 }

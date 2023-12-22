@@ -31,7 +31,7 @@ public class VotingSessionController {
     public ResponseEntity<VotingSession> createVotingSession(@RequestBody VotingSession votingSession) {
         return votingSessionService.createVotingSession(votingSession);
     }
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<VotingSession> getVotingSessionById(@PathVariable UUID id) {
         return votingSessionService.getVotingSessionById(id);

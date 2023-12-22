@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.joao.neto.msEmployees.client.ProposalResource;
+import br.joao.neto.msEmployees.client.VotesResource;
 import br.joao.neto.msEmployees.client.model.Proposal;
+import br.joao.neto.msEmployees.client.model.Votes;
+import br.joao.neto.msEmployees.client.model.VotesResponse;
 import br.joao.neto.msEmployees.model.Employee;
 import br.joao.neto.msEmployees.model.DTO.EmployeeGetResponse;
 import br.joao.neto.msEmployees.repo.EmployeeRepository;
@@ -24,11 +27,13 @@ import br.joao.neto.msEmployees.repo.EmployeeRepository;
 public class EmployeeService {
     private EmployeeRepository repository;
     private ProposalResource proposalResource;
+    private VotesResource votersResource;
 
     @Autowired
-    public EmployeeService(EmployeeRepository repository, ProposalResource proposalResource) {
+    public EmployeeService(EmployeeRepository repository, ProposalResource proposalResource, VotesResource votersResource) {
         this.repository = repository;
         this.proposalResource = proposalResource;
+        this.votersResource = votersResource;
     }
 
     public ResponseEntity<Employee> create(Employee employee){
@@ -100,5 +105,13 @@ public class EmployeeService {
         }else { 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with [ "+ cpf +" ] is not found");
         }
+    }
+
+    public ResponseEntity<VotesResponse> Voting(String cpf, String title, Boolean vote){
+        if(!repository.existsByCpf(cpf))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "employee with [ "+ cpf +" ] is not found");       
+        Employee employee = repository.findBycpf(cpf).get();
+        Votes votes = new Votes(employee.getId(), proposalResource.getByTitle(title).getBody().getId(), vote);
+        return votersResource.createVote(votes);
     }
 }

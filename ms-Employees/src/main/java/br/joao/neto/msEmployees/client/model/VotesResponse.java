@@ -1,7 +1,6 @@
-package br.joao.neto.msProposal.clients.model;
+package br.joao.neto.msEmployees.client.model;
 
 import java.util.UUID;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,15 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Votes{
+public class VotesResponse{
     private UUID id;
-    private UUID votingSession;
     private UUID employeeId;
     private boolean vote;
+
+
+    public VotesResponse(UUID id, UUID employeeId, boolean vote) {
+        this.id = id;
+        this.employeeId = employeeId;
+        this.vote = vote;
+    }
 }

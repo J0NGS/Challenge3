@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -55,9 +54,7 @@ public class Proposal {
         this.description = description;
         if(timer == null || timer.equals(0) || timer <0)
             timer = 1;
-        this.timer = timer * 60000;
-        this.votesApproved = 0;
-        this.votesRejected = 0;
+        this.timer = timer;
         this.finished = false;
     }
 }

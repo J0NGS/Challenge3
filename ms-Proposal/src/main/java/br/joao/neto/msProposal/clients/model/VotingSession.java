@@ -1,7 +1,8 @@
 package br.joao.neto.msProposal.clients.model;
 
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Votes{
+public class VotingSession {
     private UUID id;
-    private UUID votingSession;
-    private UUID employeeId;
-    private boolean vote;
+    private UUID proposalId;
+    private List<Votes> votes;
+    private Date sessionDateOver;
 }
